@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: mahla
+  Date: 2025/08/14
+  Time: 21:59
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition>
+<h:form>
+    <p:steps activeIndex="#{supplierBean.activeIndex}" styleClass="custom-steps">
+        <p:menuitem value="Supplier Details" icon="pi pi-briefcase" />
+        <p:menuitem value="Supplier Contact details" icon="pi pi-phone" />
+        <p:menuitem value="Confirmation" icon="pi pi-check" />
+        <p:menuitem value="Complete" icon="pi pi-check" />
+    </p:steps>
+
+    <!-- Step 0: Personal Info -->
+    <p:outputPanel rendered="#{supplierBean.activeIndex == 0}">
+        <h:panelGrid columns="2" style="margin-top: 20px">
+            <p:outputLabel for="supplierName" value="Supplier Name:"/>
+            <p:inputText id="supplierName" value="#{supplierBean.supplierName}" />
+
+            <p:outputLabel for="supplierVatNumber" value="Supplier Vat Number:"/>
+            <p:inputText id="supplierVatNumber" value="#{supplierBean.vatNumber}" />
+
+            <p:outputLabel for="supplierDescription" value="Supplier Description:"/>
+            <p:inputTextarea rows="5" id="supplierDescription" value="#{supplierBean.supplierDescription}" />
+
+            <p:outputLabel for="supplierType" value="Supplier Type:"/>
+            <p:selectOneMenu id="supplierType" value="#{supplierBean.supplierType}">
+                <f:selectItem itemLabel="Select One" itemValue=""/>
+                <f:selectItems value="#{supplierBean.supplierTypes}"
+                               var="type"
+                               itemLabel="#{type.supplierType}"
+                               itemValue="#{type}"/>
+            </p:selectOneMenu>
+        </h:panelGrid>
+        <p:commandButton value="Next" action="#{supplierBean.next}" update="@form" />
+    </p:outputPanel>
+
+    <!-- Step 1: Details -->
+    <p:outputPanel rendered="#{supplierBean.activeIndex == 1}">
+        <h:panelGrid id="add-det" columns="2" width="400" style="margin-top: 20px">
+             <ui:repeat value="#{supplierBean.contactInfoLineList}" var="contactInfo">
+                              <p:outputLabel for="contactName" value="Contact Name:" />
+                              <p:inputText id="contactName" value="#{contactInfo.contactInfoLineName}" />
+                              <p:outputLabel for="contactValue" value="Contact Value:" />
+                              <p:inputText id="contactValue" value="#{contactInfo.contactInfoLineValue}" />
+                              <p:outputLabel for="contactType" value="Contact Type:" />
+                              <p:inputText id="contactType" value="#{contactInfo.contactInfoLineType}" />
+                              <p:outputLabel for="contactStatus" value="Status:" />
+                              <p:selectOneMenu id="contactStatus" value="#{contactInfo.contactInfoLineStatus}">
+                                  <f:selectItem itemLabel="Active" itemValue="#{1}" />
+                                  <f:selectItem itemLabel="Inactive" itemValue="#{2}" />
+                              </p:selectOneMenu>
+                              <p:outputLabel for="contactDescription" value="Description:" />
+                              <p:inputTextarea id="contactDescription" value="#{contactInfo.contactInfoLineDescription}" rows="3" />
+                          </ui:repeat>
+            <p:commandButton value="Add More" action="#{supplierBean.addSupplierAdrresses}" update="add-det" />
+        </h:panelGrid>
+        <p:commandButton value="Back" action="#{supplierBean.previous}" update="@form" />
+
+        <p:commandButton value="Next" action="#{supplierBean.next}" update="@form" />
+    </p:outputPanel>
+
+    <!-- Step 2: Confirmation -->
+    <p:outputPanel rendered="#{supplierBean.activeIndex == 2}">
+        <h:outputText value="Review your information and confirm." />      <h:outputText value="Review your information and confirm." />      <h:outputText value="Review your information and confirm." />
+        <p:commandButton value="Back" action="#{supplierBean.previous}" update="@form" />
+      <!--  <p:commandButton value="Submit" action="#{supplierBean.submit}" update="@form" />-->
+    </p:outputPanel>
+
+</h:form>
+
+
+</ui:composition>
+
+
+</html>

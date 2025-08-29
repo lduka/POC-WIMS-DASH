@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: mahla
+  Date: 2025/08/14
+  Time: 22:01
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets" xmlns:p="primefaces">
+<h:head>
+   <h:outputStylesheet name="default.css" />
+    <style type="text/css">
+        .layout-topbar {
+            background-color: var(--surface-a);
+            padding: 0;
+            height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 997;
+            box-shadow: 0 0 4px rgba(0, 0, 0, .25);
+            border-bottom: 1px solid var(--surface-d);
+            display: flex
+        ;
+            align-items: center;
+            padding: 0 35px;
+        }
+        .header {
+            position: fixed;           /* Fixes the header to the top */
+            top: 0;                    /* Aligns it to the top edge */
+            left: 0;                   /* Aligns it to the left edge */
+            right: 0;                  /* Ensures full width */
+            z-index: 1000;             /* Keeps it above other content */
+
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .layout {
+            display: flex;
+            height: calc(100vh - 50px);
+        }
+        .menu {
+            padding-top: 80px;
+            width: fit-content;
+            background-color: #e0e0e0;
+        }
+        .main {
+            width: 80%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .profile-pic {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+</style>       </h:head>
+
+<h:body>
+    <!-- Header -->
+    <div class="header">
+        <h:form style="display: inline-flex">
+        <h:graphicImage value="/resources/images/profile.jpg" styleClass="profile-pic" />
+            <p:menubar>
+                <p:menuitem value="Home" action="#{dashboardBean.setContent('home.xhtml')}">
+                    <p:ajax update="mainContent"/>
+                </p:menuitem>
+                <p:menuitem value="Profile" action="#{dashboardBean.setContent('supplier/addSupplier.xhtmll')}">
+                    <p:ajax update="mainContent"/>
+                </p:menuitem>
+                <p:menuitem value="Settings" action="#{dashboardBean.setContent('supplier/searchSupplier.xhtml')}">
+                    <p:ajax update="mainContent"/>
+                </p:menuitem>
+            </p:menubar>
+        <p:menuButton value="Options">
+            <p:menuitem value="Profile" icon="pi pi-user" action="#{userBean.viewProfile}" />
+            <p:menuitem value="Logout" icon="pi pi-sign-out" action="#{userBean.logout}" />
+        </p:menuButton>
+        </h:form>
+    </div>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Sidebar Menu -->
+        <div class="menu">
+            <h:form>
+
+                <p:panelMenu style="width:250px" multiple="true">
+
+                    <!-- Supplier Management -->
+                    <p:submenu label="Supplier Management" icon="pi pi-fw pi-truck">
+                        <p:menuitem value="Add Supplier"
+                                    icon="pi pi-fw pi-user-plus"
+                                    action="#{dashboardBean.setContent('supplier/addSupplier.xhtml')}"
+                                    update="mainContent"
+                                    />
+                        <p:menuitem value="Supplier List"
+                                    icon="pi pi-fw pi-list"
+                                    action="#{dashboardBean.setContent('supplier/listSupplier.xhtml')}"
+                                    update="mainContent"
+                                 />
+                        <p:menuitem value="Search Supplier"
+                                    icon="pi pi-fw pi-search"
+                                    action="#{dashboardBean.setContent('supplier/searchSupplier.xhtml')}"
+                                    update="mainContent"
+                                  />
+                    </p:submenu>
+
+                    <!-- Order Tracking -->
+                    <p:submenu label="Order Tracking" icon="pi pi-fw pi-shopping-cart">
+                        <p:menuitem value="View Orders"
+                                    icon="pi pi-fw pi-eye"
+                                    action="#{dashboardBean.setContent('supplier/searchSupplier.xhtml')}"
+                                    update="mainContent"
+                                  />
+                        <p:menuitem value="Order Status"
+                                    icon="pi pi-fw pi-info-circle"
+                                 />
+                        <p:menuitem value="Search Orders"
+                                    icon="pi pi-fw pi-search"
+                            />
+                    </p:submenu>
+
+                    <!-- Sales -->
+                    <p:submenu label="Sales" icon="pi pi-fw pi-dollar">
+                        <p:menuitem value="New Sale"
+                                    icon="pi pi-fw pi-plus"
+                                />
+                        <p:menuitem value="Sales Report"
+                                    icon="pi pi-fw pi-chart-line"
+                                    />
+                    </p:submenu>
+
+                    <!-- Returns -->
+                    <p:submenu label="Returns" icon="pi pi-fw pi-refresh">
+                        <p:menuitem value="Process Return"
+                                    icon="pi pi-fw pi-undo"
+                              />
+                        <p:menuitem value="Return History"
+                                    icon="pi pi-fw pi-clock"
+                              />
+                    </p:submenu>
+
+                    <!-- Stock Management -->
+                    <p:submenu label="Stock Management" icon="pi pi-fw pi-box">
+                        <p:menuitem value="Stock Overview"
+                                    icon="pi pi-fw pi-th-large"
+                                    />
+                        <p:menuitem value="Add Stock"
+                                    icon="pi pi-fw pi-plus-circle"
+                                />
+                        <p:menuitem value="Stock Reports"
+                                    icon="pi pi-fw pi-file"
+                                  />
+                    </p:submenu>
+
+                </p:panelMenu>
+
+
+            </h:form>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <h:panelGroup id="mainContent" style="padding-top: 50px" wigetVar="mainContent" layout="block">
+
+            <ui:include src="#{dashboardBean.content}" />
+            </h:panelGroup>
+        </div>
+    </div>
+</h:body>
+</html>
