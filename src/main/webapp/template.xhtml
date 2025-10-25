@@ -77,7 +77,7 @@
                 <p:menuitem value="Home" action="#{dashboardBean.setContent('home.xhtml')}">
                     <p:ajax update="mainContent"/>
                 </p:menuitem>
-                <p:menuitem value="Profile" action="#{dashboardBean.setContent('supplier/addSupplier.xhtmll')}">
+                <p:menuitem value="Profile" action="#{dashboardBean.setContent('supplier/addSupplier.xhtml')}">
                     <p:ajax update="mainContent"/>
                 </p:menuitem>
                 <p:menuitem value="Settings" action="#{dashboardBean.setContent('supplier/searchSupplier.xhtml')}">
@@ -97,7 +97,7 @@
         <div class="menu">
             <h:form>
 
-                <p:panelMenu style="width:250px" multiple="true">
+                <p:panelMenu style="width:250px" multiple="false">
 
                     <!-- Supplier Management -->
                     <p:submenu label="Supplier Management" icon="pi pi-fw pi-truck">
@@ -122,14 +122,18 @@
                     <p:submenu label="Order Tracking" icon="pi pi-fw pi-shopping-cart">
                         <p:menuitem value="View Orders"
                                     icon="pi pi-fw pi-eye"
-                                    action="#{dashboardBean.setContent('supplier/searchSupplier.xhtml')}"
+                                    action="#{dashboardBean.setContent('order/viewOrders.xhtml')}"
                                     update="mainContent"
                                   />
                         <p:menuitem value="Order Status"
                                     icon="pi pi-fw pi-info-circle"
+                                    action="#{dashboardBean.setContent('order/orderStatus.xhtml')}"
+                                    update="mainContent"
                                  />
                         <p:menuitem value="Search Orders"
                                     icon="pi pi-fw pi-search"
+                                    action="#{dashboardBean.setContent('order/searchOrders.xhtml')}"
+                                    update="mainContent"
                             />
                     </p:submenu>
 
@@ -137,9 +141,13 @@
                     <p:submenu label="Sales" icon="pi pi-fw pi-dollar">
                         <p:menuitem value="New Sale"
                                     icon="pi pi-fw pi-plus"
+                                    action="#{dashboardBean.setContent('sales/newSale.xhtml')}"
+                                    update="mainContent"
                                 />
                         <p:menuitem value="Sales Report"
                                     icon="pi pi-fw pi-chart-line"
+                                    action="#{dashboardBean.setContent('sales/salesReport.xhtml')}"
+                                    update="mainContent"
                                     />
                     </p:submenu>
 
@@ -147,9 +155,13 @@
                     <p:submenu label="Returns" icon="pi pi-fw pi-refresh">
                         <p:menuitem value="Process Return"
                                     icon="pi pi-fw pi-undo"
+                                    action="#{dashboardBean.setContent('returns/processReturn.xhtml')}"
+                                    update="mainContent"
                               />
                         <p:menuitem value="Return History"
                                     icon="pi pi-fw pi-clock"
+                                    action="#{dashboardBean.setContent('returns/returnHistory.xhtml')}"
+                                    update="mainContent"
                               />
                     </p:submenu>
 
@@ -157,13 +169,33 @@
                     <p:submenu label="Stock Management" icon="pi pi-fw pi-box">
                         <p:menuitem value="Stock Overview"
                                     icon="pi pi-fw pi-th-large"
+                                    action="#{dashboardBean.setContent('stock/stockOverview.xhtml')}"
+                                    update="mainContent"
                                     />
                         <p:menuitem value="Add Stock"
                                     icon="pi pi-fw pi-plus-circle"
+                                    action="#{dashboardBean.setContent('stock/addStock.xhtml')}"
+                                    update="mainContent"
                                 />
                         <p:menuitem value="Stock Reports"
                                     icon="pi pi-fw pi-file"
+                                    action="#{dashboardBean.setContent('stock/stockReports.xhtml')}"
+                                    update="mainContent"
                                   />
+                    </p:submenu>
+
+                    <!-- Cashier Management -->
+                    <p:submenu label="Cashier Management" icon="pi pi-fw pi-users">
+                        <p:menuitem value="Add Cashier"
+                                    icon="pi pi-fw pi-user-plus"
+                                    action="#{dashboardBean.setContent('cashier/addCashier.xhtml')}"
+                                    update="mainContent"
+                                    />
+                        <p:menuitem value="Maintain Cashier"
+                                    icon="pi pi-fw pi-user-edit"
+                                    action="#{dashboardBean.setContent('cashier/maintainCashier.xhtml')}"
+                                    update="mainContent"
+                                    />
                     </p:submenu>
 
                 </p:panelMenu>

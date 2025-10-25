@@ -19,10 +19,10 @@ public class SupplierBean {
     private I_STATUS_CONSTANTS iStatusConstants;
     private E_SUPPLIER_TYPE eSupplierType;
     private Addressline supplierAddressLine;
-    private List<ContactInfoLine> contactInfoLineList;
+    private List<ContactInfoLine> contactInfoLineList= new ArrayList<>();
     private List<NoteItem>   noteItemList;
-    private List<E_SUPPLIER_TYPE> supplierTypes;
-    private Integer activeIndex = 0;
+    private List<E_SUPPLIER_TYPE> supplierTypes= List.of(E_SUPPLIER_TYPE.values());
+    private Integer activeIndex ;
     private ContactInfoLine contactInfoLine = new ContactInfoLine();
 
 
@@ -35,7 +35,6 @@ public class SupplierBean {
                 contactInfoLineList.add(contactInfoLine);
             }
         }
-
         return activeIndex;
     }
 
@@ -46,10 +45,9 @@ public class SupplierBean {
 
 
 
-    public void next() {
-        if (activeIndex <= 4) {
+    public void next()
+    {
             activeIndex++;
-        }
     }
 
     public void previous() {
@@ -68,8 +66,7 @@ public class SupplierBean {
 
     @PostConstruct
     public void init() {
-        supplierTypes = List.of(E_SUPPLIER_TYPE.values());
-        contactInfoLineList = new ArrayList<>();
+
         if (contactInfoLineList.isEmpty()) {
             contactInfoLineList.add(new ContactInfoLine());
         }
@@ -145,7 +142,8 @@ public class SupplierBean {
         return contactInfoLineList;
     }
 
-    public void setContactInfoLineList(List<ContactInfoLine> contactInfoLineList) {
+    public void setContactInfoLineList(List<ContactInfoLine> contactInfoLineList)
+    {
         this.contactInfoLineList = contactInfoLineList;
     }
 

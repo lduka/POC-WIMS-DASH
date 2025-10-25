@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition>
+
+    <p:card title="Maintain Cashier" style="width: 100%">
+        <h:form id="cashierMaintainForm">
+            <p:messages id="msgs" showDetail="true" closable="true"/>
+
+            <p:panel header="Find Cashier by ID" styleClass="p-mb-3">
+                <p:panelGrid columns="3" layout="grid" styleClass="p-fluid" columnClasses="col-12 md:col-3, col-12 md:col-6, col-12 md:col-3">
+                    <p:outputLabel for="searchId" value="Cashier ID"/>
+                    <p:inputText id="searchId" value="#{cashierBean.searchId}" placeholder="Enter ID"/>
+                    <p:commandButton value="Find" icon="pi pi-search" actionListener="#{cashierBean.findById}" update="@form"/>
+                </p:panelGrid>
+
+                <p:panel id="foundPanel" header="Cashier Details" rendered="#{not empty cashierBean.foundCashier}" styleClass="p-mt-2">
+                    <p:panelGrid columns="2" styleClass="p-fluid">
+                        <h:outputText value="Name:"/>
+                        <h:outputText value="#{cashierBean.foundCashier.name}"/>
+                        <h:outputText value="Employee ID:"/>
+                        <h:outputText value="#{cashierBean.foundCashier.employeeId}"/>
+                        <h:outputText value="Username:"/>
+                        <h:outputText value="#{cashierBean.foundCashier.username}"/>
+                        <h:outputText value="Status:"/>
+                        <h:outputText value="#{cashierBean.foundCashier.status}"/>
+                        <h:outputText value="Notes:"/>
+                        <h:outputText value="#{cashierBean.foundCashier.notes}"/>
+                    </p:panelGrid>
+                </p:panel>
+            </p:panel>
+
+            <p:panel header="All Cashiers">
+                <p:commandButton value="Load All" icon="pi pi-download" actionListener="#{cashierBean.loadAll}" update="@form" styleClass="p-mb-2"/>
+                <p:dataTable id="cashierTable" value="#{cashierBean.cashierList}" var="c" paginator="true" rows="10" emptyMessage="No cashiers loaded">
+                    <p:column headerText="Name">
+                        <h:outputText value="#{c.name}"/>
+                    </p:column>
+                    <p:column headerText="Employee ID">
+                        <h:outputText value="#{c.employeeId}"/>
+                    </p:column>
+                    <p:column headerText="Username">
+                        <h:outputText value="#{c.username}"/>
+                    </p:column>
+                    <p:column headerText="Status">
+                        <h:outputText value="#{c.status}"/>
+                    </p:column>
+                    <p:column headerText="Notes">
+                        <h:outputText value="#{c.notes}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </p:card>
+
+</ui:composition>
+
+</html>

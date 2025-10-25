@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition>
+
+    <p:card title="Add Cashier" style="width: 100%">
+        <h:form id="addCashierForm">
+            <p:panelGrid columns="2" layout="grid" styleClass="p-fluid" columnClasses="col-12 md:col-3, col-12 md:col-9">
+                <p:outputLabel for="name" value="Full Name"/>
+                <p:inputText id="name" value="#{cashierBean.name}" placeholder="e.g. Jane Doe"/>
+
+                <p:outputLabel for="employeeId" value="Employee ID"/>
+                <p:inputText id="employeeId" value="#{cashierBean.employeeId}"/>
+
+                <p:outputLabel for="username" value="Username"/>
+                <p:inputText id="username" value="#{cashierBean.username}"/>
+
+                <p:outputLabel for="pin" value="PIN"/>
+                <p:password id="pin" value="#{cashierBean.pin}" toggleMask="true" feedback="false"/>
+
+                <p:outputLabel for="status" value="Status"/>
+                <p:selectOneMenu id="status" value="#{cashierBean.status}">
+                    <f:selectItem itemLabel="Active" itemValue="ACTIVE"/>
+                    <f:selectItem itemLabel="Inactive" itemValue="INACTIVE"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel for="notes" value="Notes"/>
+                <p:inputTextarea id="notes" value="#{cashierBean.notes}" rows="3"/>
+            </p:panelGrid>
+
+            <div class="p-mt-3">
+                <p:commandButton value="Save" icon="pi pi-save" actionListener="#{cashierBean.save}" update="@form"/>
+                <p:commandButton value="Reset" icon="pi pi-refresh" type="reset" styleClass="p-button-secondary p-ml-2"/>
+            </div>
+        </h:form>
+    </p:card>
+
+</ui:composition>
+
+</html>
