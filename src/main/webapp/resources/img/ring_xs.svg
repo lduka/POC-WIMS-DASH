@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="160" viewBox="0 0 320 160" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Half ring progress small">
+    <defs>
+        <clipPath id="halfClip"> <rect x="0" y="0" width="320" height="120"/> </clipPath>
+        <radialGradient id="steelRadial" cx="35%" cy="35%" r="85%"><stop offset="0%" stop-color="#f6f7f8"/><stop offset="25%" stop-color="#e6e8ea"/><stop offset="55%" stop-color="#cfcfd1"/><stop offset="75%" stop-color="#b7b9bb"/><stop offset="100%" stop-color="#9aa0a4"/></radialGradient>
+        <linearGradient id="steelGloss" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.9)"/><stop offset="35%" stop-color="rgba(255,255,255,0.35)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient>
+        <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%"><feOffset dx="0" dy="1" result="off"/><feGaussianBlur in="off" stdDeviation="1.2" result="blur"/><feComposite in="blur" in2="SourceGraphic" operator="out" result="out"/><feColorMatrix in="out" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.3 0" result="shadow"/><feComposite in="SourceGraphic" in2="shadow" operator="over"/></filter>
+        <style type="text/css"><![CDATA[
+      #progressArc { transition: stroke 250ms linear, stroke-dasharray 400ms ease; stroke-linecap:round; }
+      #tipBubble { transition: cx 400ms ease, cy 400ms ease, fill 200ms linear, transform 400ms ease; }
+      #tipText { font-family: "Segoe UI", Roboto, Arial, sans-serif; font-size:12px; font-weight:600; fill:#222; text-anchor:middle; dominant-baseline:middle; pointer-events:none; }
+      #centerLabelTitle { font-family: "Segoe UI", Roboto, Arial, sans-serif; font-size:14px; fill:#666; text-anchor:middle; }
+      #centerLabelValue { font-family: "Segoe UI", Roboto, Arial, sans-serif; font-size:22px; font-weight:700; fill:#222; text-anchor:middle; }
+    ]]></style>
+    </defs>
+
+    <path d="M 40 140 A 120 120 0 0 1 280 140" fill="none" stroke="#EFEFEF" stroke-width="20" stroke-linecap="round" />
+    <g clip-path="url(#halfClip)">
+        <circle id="progressArc" cx="160" cy="140" r="120" fill="none" stroke="#4caf50" stroke-width="20" transform="rotate(180 160 140)" style="stroke-dasharray: 0 376.99111843077515;" />
+    </g>
+
+    <g id="tipGroup">
+        <circle id="tipBubble" cx="40" cy="140" r="12" fill="url(#steelRadial)" stroke="#9aa0a4" stroke-width="1" filter="url(#innerShadow)"/>
+        <path d="M28 128 A12 12 0 0 1 52 128 L52 128 A12 12 0 0 0 28 128 Z" fill="url(#steelGloss)" opacity="0.9" transform="translate(-2,-2) scale(1.03)"/>
+        <circle cx="40" cy="140" r="12" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.9"/>
+        <text id="tipText" x="40" y="140">0%</text>
+    </g>
+
+    <g id="centerLabel" transform="translate(160,80)" pointer-events="none">
+        <text id="centerLabelTitle" x="0" y="-6">Total Sales</text>
+        <text id="centerLabelValue" x="0" y="18">0%</text>
+    </g>
+</svg>

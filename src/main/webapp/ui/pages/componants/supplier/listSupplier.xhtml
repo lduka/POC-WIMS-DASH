@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Created by IntelliJ IDEA.
-  User: mahla
-  Date: 2025/08/14
-  Time: 21:59
--->
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="primefaces"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces"
       xmlns:f="jakarta.faces.core">
 
 <ui:composition>
-    <p:card title="Add Supplier" footer="my foot " style="width: 100%">
-        <p:panelGrid columns="2" style="width: 100%">
-            <p:card style="width:200px ;height: 200px">
-                <p:clock  displayMode="analog"/>
-            </p:card>
-        </p:panelGrid>
+    <p:card title="Suppliers" style="width: 100%">
+        <h:form id="supplierListForm">
+            <f:event type="preRenderView" listener="#{supplierBean.loadAll}" />
+            <p:messages showDetail="true" closable="true"/>
+
+            <div class="p-d-flex p-ai-center p-jc-between p-mb-2">
+                <p:inputText id="globalFilter" value="#{supplierBean.searchQuery}" placeholder="Search suppliers (name, phone, email)" style="width: 300px"/>
+                <div>
+                    <p:commandButton id="loadAllBtn" value="Load All" icon="pi pi-download" actionListener="#{supplierBean.loadAll}" update=":supplierListForm:supplierTable"/>
+                    <p:commandButton id="refreshBtn" value="Refresh" icon="pi pi-refresh" actionListener="#{supplierBean.loadAll}" update=":supplierListForm:supplierTable" styleClass="p-ml-2"/>
+                </div>
+            </div>
+
+            <p:dataTable id="supplierTable" value="#{supplierBean.suppliers}" var="s"
+                         paginator="true" rows="10" rowKey="#{s.id}"
+                         emptyMessage="No suppliers found"
+                         widgetVar="supplierTbl">
+                <p:column headerText="ID" style="width:100px">
+                    <h:outputText value="#{s.id != null ? s.id : ''}"/>
+                </p:column>
+                <p:column headerText="Name" filterBy="#{s.supplierName}" filterMatchMode="contains">
+                    <h:outputText value="#{empty s.supplierName ? '' : s.supplierName}"/>
+                </p:column>
+
+                <p:column headerText="Actions" style="width:240px">
+                    <p:commandButton value="View" icon="pi pi-eye"
+                                     action="#{dashboardBean.setContent('supplier/viewSupplierContent.xhtml')}"
+                                     update=":mainContent"
+                                     process="@this"
+                                     styleClass="p-button-sm p-mr-2">
+                        <f:setPropertyActionListener value="#{s.id}" target="#{supplierBean.supplierId}"/>
+                    </p:commandButton>
+                    <p:commandButton value="Flag" icon="pi pi-flag"
+                                     actionListener="#{supplierBean.flagSupplier(s.id)}"
+                                     process="@this"
+                                     update=":supplierListForm :supplierListForm:supplierTable"
+                                     styleClass="p-button-warning p-button-sm"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </p:card>
 </ui:composition>
-
-
 </html>

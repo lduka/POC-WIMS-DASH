@@ -10,7 +10,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static co.za.pos.wims.enterprise.pocwimsdash.webservice.HttpMethod.DELETE;
 import static co.za.pos.wims.enterprise.pocwimsdash.webservice.HttpMethod.GET;
@@ -19,18 +21,26 @@ import static co.za.pos.wims.enterprise.pocwimsdash.webservice.HttpMethod.PUT;
 
 public abstract class WebServiceMarshal<T> {
     private static final ObjectMapper mapper = new ObjectMapper();
+    private final Map<String, String> parameters = new HashMap<>();
     private final Class<T> entityClass;
     private final ApiEndpoint apiEndpoint;
     private final HttpClient client = HttpClient.newHttpClient();
-
+    private boolean queryParam ;
     protected WebServiceMarshal(Class<T> entityClass, ApiEndpoint apiEndpoint) {
         this.entityClass = entityClass;
         this.apiEndpoint = apiEndpoint;
     }
 
+    // Helper to compose full URL with query parameters
+    public String buildUrlWithParams()
+    {
+
+        return null;
+    }
+
     public List<T> DO_GET() throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(apiEndpoint.url()))
+                .uri(buildURL(apiEndpoint))
                 .header("Accept", "application/json")
                 .GET()
                 .build();
@@ -46,7 +56,7 @@ public abstract class WebServiceMarshal<T> {
 
     public T DO_GET(ApiEndpoint endpoint) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(endpoint.url()))
+                .uri(buildURL(endpoint))
                 .header("Accept", "application/json")
                 .GET()
                 .build();
@@ -61,9 +71,9 @@ public abstract class WebServiceMarshal<T> {
     }
 
     // New overload to support fully composed URLs (with query parameters)
-    public T DO_GET_ONE(String url) throws IOException, InterruptedException {
+    public T DO_GET_ONE() throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(buildURL(apiEndpoint))
                 .header("Accept", "application/json")
                 .GET()
                 .build();
@@ -78,7 +88,7 @@ public abstract class WebServiceMarshal<T> {
 
     public HttpResponse<String> DO_POST(HttpRequest.BodyPublisher body) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(apiEndpoint.url()))
+                .uri(buildURL(apiEndpoint))
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .POST(body)
@@ -94,7 +104,7 @@ public abstract class WebServiceMarshal<T> {
 
     protected void doPUT(ApiEndpoint endpoint, HttpRequest.BodyPublisher body) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(endpoint.url()))
+                .uri(buildURL(endpoint))
                 .header("Accept", "application/json")
                 .PUT(body)
                 .build();
@@ -103,7 +113,7 @@ public abstract class WebServiceMarshal<T> {
 
     protected void doDELETE(ApiEndpoint endpoint) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(endpoint.url()))
+                .uri(buildURL(endpoint))
                 .header("Accept", "application/json")
                 .DELETE()
                 .build();
@@ -121,5 +131,33 @@ public abstract class WebServiceMarshal<T> {
             }
         }
         return this;
+    }
+    public void withPathVariable(String trim) {
+
+    }
+
+    public boolean isQueryParam()
+    {
+        return queryParam;
+    }
+
+    public Map<String, String> getParameters()
+    {
+        return parameters;
+    }
+
+    public void setQueryParam(boolean queryParam)
+    {
+        this.queryParam = queryParam;
+    }
+
+    private URI buildURL(ApiEndpoint endpoint)
+    {
+       return URI.create(isQueryParam() ? getMutatedURL(endpoint) :endpoint.url());
+    }
+
+    private String getMutatedURL(ApiEndpoint endpoint)
+    {
+        return endpoint.url()+"/"+getParameters().values().stream().findFirst().get().trim();
     }
 }

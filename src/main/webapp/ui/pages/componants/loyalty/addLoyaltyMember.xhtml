@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces">
+<ui:composition>
+    <h:panelGroup layout="block">
+        <h2>Add Loyalty Member</h2>
+        <p:messages/>
+
+        <h:form>
+            <p:panelGrid columns="2" layout="grid" styleClass="p-fluid"
+                         columnClasses="col-12 md:col-3, col-12 md:col-9">
+                <p:outputLabel for="accountId" value="Phome Number"/>
+                <p:inputText id="accountId" value="#{loyaltyViewBean.phoneNumber}" required="true"
+                             requiredMessage="Product name is required" placeholder="0812324525"/>
+
+                <p:outputLabel for="accAlias" value="ACoount Alias"/>
+                <p:inputText id="accAlias" value="#{loyaltyViewBean.accountAlias}" required="true"
+                             requiredMessage="Product name is required" placeholder="Guy Bob"/>
+
+                <p:panelGrid columns="2" layout="grid">
+                    <p:commandButton value="Save" icon="pi pi-save" actionListener="#{loyaltyViewBean.create}"
+                                     update="@form"/>
+
+                    <p:commandButton value="Reset" icon="pi pi-refresh" type="reset"
+                                     styleClass="p-button-secondary p-ml-2"/>
+                </p:panelGrid>
+
+            </p:panelGrid>
+        </h:form>
+
+    </h:panelGroup>
+</ui:composition>
+</html>

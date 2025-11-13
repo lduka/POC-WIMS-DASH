@@ -1,22 +1,39 @@
 package co.za.pos.wims.enterprise.pocwimsdash.beans;
 
-import co.za.pos.wims.enterprise.pocwimsdash.beans.util.I_STATUS_CONSTANTS;
-
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContactInfoLine {
-
+    private Long id;
+    @JsonAlias({"contactId","id"})
     private Long contactInfoLineId;
+    @JsonAlias({"contactName","name"})
     private String contactInfoLineName;
+    @JsonAlias({"contactValue","value","contact"})
     private String contactInfoLineValue;
+    @JsonAlias({"contactType","type"})
     private String contactInfoLineType;
-    private I_STATUS_CONSTANTS contactInfoLineStatus;
+    // Use simple Integer for status to avoid JSF converter issues in selectOneMenu
+    @JsonAlias({"contactStatus","status"})
+    private Integer contactInfoLineStatus;
+    @JsonAlias({"contactDescription","description"})
     private String contactInfoLineDescription;
     private Long contactInfoLineCreatedBy;
     private Date contactInfoLineCreatedDate;
     private String contactInfoLineUpdatedBy;
     private Date contactInfoLineUpdatedDate;
 
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
 
     public Long getContactInfoLineId() {
         return contactInfoLineId;
@@ -50,11 +67,11 @@ public class ContactInfoLine {
         this.contactInfoLineType = contactInfoLineType;
     }
 
-    public I_STATUS_CONSTANTS getContactInfoLineStatus() {
+    public Integer getContactInfoLineStatus() {
         return contactInfoLineStatus;
     }
 
-    public void setContactInfoLineStatus(I_STATUS_CONSTANTS contactInfoLineStatus) {
+    public void setContactInfoLineStatus(Integer contactInfoLineStatus) {
         this.contactInfoLineStatus = contactInfoLineStatus;
     }
 

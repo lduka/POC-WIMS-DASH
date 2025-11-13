@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition>
+    <p:card title="Stock List" style="width: 100%">
+        <h:form id="stockListForm">
+            <f:event type="preRenderView" listener="#{productBean.loadAll}" />
+            <p:messages showDetail="true" closable="true"/>
+
+            <div class="p-d-flex p-ai-center p-jc-between p-mb-2">
+                <div>
+                    <p:commandButton id="loadAllBtn" value="Load All" icon="pi pi-download"
+                                     actionListener="#{productBean.loadAll}"
+                                     update=":stockListForm:productTable"/>
+                    <p:commandButton id="refreshBtn" value="Refresh" icon="pi pi-refresh"
+                                     styleClass="p-ml-2"
+                                     actionListener="#{productBean.loadAll}"
+                                     update=":stockListForm:productTable"/>
+                </div>
+            </div>
+
+            <p:dataTable id="productTable" value="#{productBean.products}" var="p"
+                         paginator="true" rows="10" rowKey="#{p.id}"
+                         emptyMessage="No products found">
+                <p:column headerText="ID" style="width:100px">
+                    <h:outputText value="#{p.id != null ? p.id : ''}"/>
+                </p:column>
+                <p:column headerText="Name">
+                    <h:outputText value="#{empty p.productName ? '' : p.productName}"/>
+                </p:column>
+                <p:column headerText="Barcode">
+                    <h:outputText value="#{empty p.barcode ? '' : p.barcode}"/>
+                </p:column>
+                <p:column headerText="Price" style="width:140px; text-align:right;">
+                    <h:outputText value="#{p.price}">
+                        <f:convertNumber type="currency" currencySymbol="" maxFractionDigits="2" minFractionDigits="2" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Category">
+                    <h:outputText value="#{p.productCategory != null ? p.productCategory.categoryName : ''}"/>
+                </p:column>
+                <p:column headerText="Status" style="width:140px">
+                    <h:outputText value="#{p.status != null ? p.status.desc : ''}"/>
+                </p:column>
+                <p:column headerText="Supplier">
+                    <h:outputText value="#{p.supplier != null ? p.supplier.supplierName : ''}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </p:card>
+</ui:composition>
+</html>

@@ -46,7 +46,6 @@ public class CashierBean implements Serializable {
         try {
             WebServiceOperator<CashierBean> op = new WebServiceOperator<>(CashierBean.class, ApiEndpoint.CREATE_CASHIER)
                     .withBody(this);
-
             HttpResponse<String> resp = WebServiceCommandDelegate.execute(op);
 
             int code = resp != null ? resp.statusCode() : 0;
@@ -72,10 +71,9 @@ public class CashierBean implements Serializable {
             return;
         }
         try {
-            WebServiceOperator<CashierBean> op = new WebServiceOperator<>(CashierBean.class, ApiEndpoint.FIND_CASHIER_BY_ID)
-                    .expectOne();
-            String url = ApiEndpoint.FIND_CASHIER_BY_ID.url() + "/" + searchId.trim();
-            this.foundCashier = op.DO_GET_ONE(url);
+            WebServiceOperator<CashierBean> op = new WebServiceOperator<>(CashierBean.class, ApiEndpoint.FIND_CASHIER_BY_EMPLOYEE_ID);
+            op.setParameter("employeeId",searchId.trim());
+            this. foundCashier=  WebServiceCommandDelegate.execute(op) ;
             if (this.foundCashier == null) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Not found", "No cashier found for ID " + searchId));

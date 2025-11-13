@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces">
+<ui:composition>
+    <h:form id="saleUserMaintainForm">
+        <h:panelGroup layout="block">
+            <h2>user sale report
+            </h2>
+            <p:messages/>
+            <h:outputText value="Create a new sale here."/>
+
+            <p:panel header="Find Cashier by ID" styleClass="p-mb-3">
+                <p:panelGrid columns="3" layout="grid" styleClass="p-fluid"
+                             columnClasses="col-12 md:col-3, col-12 md:col-6, col-12 md:col-3">
+                    <p:outputLabel for="searchId" value="Cashier ID"/>
+                    <p:inputText id="searchId" value="#{userReportBean.searchId}" placeholder="Enter ID"/>
+                    <p:commandButton value="Find" icon="pi pi-search" actionListener="#{userReportBean.findById}"
+                                     update="@form"/>
+                </p:panelGrid>
+                <p:panelGrid rendered="#{userReportBean.foundCashier ne null }" columns="4"
+                             columnClasses="col-12 md:col-2, col-12 md:col-4, col-12 md:col-2, col-12 md:col-4">
+
+                    <p:outputLabel>Name:</p:outputLabel>
+                    <p:outputLabel>#{userReportBean.foundCashier.name}</p:outputLabel>
+                    <p:outputLabel>User Name</p:outputLabel>
+                    <p:outputLabel>#{userReportBean.foundCashier.username}</p:outputLabel>
+
+                    <p:outputLabel>Status</p:outputLabel>
+                    <p:outputLabel>#{userReportBean.foundCashier.status}</p:outputLabel>
+
+                    <p:outputLabel for="fromDate" value="From"/>
+                    <p:datePicker id="fromDate" value="#{userReportBean.startDate}" pattern="yyyy-MM-dd"
+                                  showIcon="true"/>
+
+                    <p:outputLabel for="toDate" value="To"/>
+                    <p:datePicker id="toDate" value="#{userReportBean.endDate}" pattern="yyyy-MM-dd" showIcon="true"/>
+
+                    <p:commandButton styleClass="col-12 md:col-2" value="Load Sales" icon="pi pi-search"
+                                     actionListener="#{userReportBean.saleOverView}" update="@form"/>
+                    <p:commandButton styleClass="col-12 md:col-2" value="Apply Range" icon="pi pi-filter"
+                                     actionListener="#{userReportBean.createLineModel}"
+                                     update=":saleUserMaintainForm:chartPanel"/>
+                </p:panelGrid>
+
+            </p:panel>
+
+
+                <p:panel id="chartPanel" >
+                    <p:chart value="#{userReportBean.lineModel}" style="width: 1000px; height: 500px;"/>
+
+                </p:panel>
+                <p:panel>
+                    <p:outputPanel rendered="#{not empty userReportBean.saleCreateRequestList}">
+                        <p:spacer height="10"/>
+                        <p:dataTable value="#{userReportBean.saleCreateRequestList}" var="s" paginator="true" rows="10"
+                                     emptyMessage="No sales loaded yet">
+                            <p:column headerText="Created At">
+                                <h:outputText value="#{empty s.createdAt ? '' : s.createdAt}"/>
+                            </p:column>
+                            <p:column headerText="Total" style="text-align: right; width: 140px;">
+                                <h:outputText value="#{s.total}"/>
+                            </p:column>
+                            <p:column headerText="Sale Type" style="width: 180px;">
+                                <h:panelGroup layout="block">
+                                    <h:panelGroup rendered="#{s.saleType == 1}">
+                                        <span class="p-d-inline-flex p-ai-center">
+                                            <i class="pi pi-money-bill p-mr-2" title="Cash" style="color: #16a34a;"></i>
+                                           
+                                        </span>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{s.saleType == 2}">
+                                        <span class="p-d-inline-flex p-ai-center">
+                                            <i class="pi pi-credit-card p-mr-2" title="Card" style="color: #1d4ed8;"></i>
+                                          
+                                        </span>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{s.saleType != 1 and s.saleType != 2}">
+                                        <h:outputText value=""/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </p:column>
+                            <p:column headerText="Cashier" style="width: 200px;">
+                                <h:outputText value="#{empty s.cashier ? '' : s.cashier}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:panel>
+        </h:panelGroup>
+    </h:form>
+</ui:composition>
+</html>

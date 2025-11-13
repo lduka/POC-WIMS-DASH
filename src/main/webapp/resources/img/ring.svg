@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="640" height="320" viewBox="0 0 640 320"
+     preserveAspectRatio="xMidYMid meet" role="img" aria-label="Half ring progress large updated">
+    <defs>
+        <clipPath id="halfClip">
+            <rect x="0" y="0" width="640" height="240"/>
+        </clipPath>
+
+        <radialGradient id="steelRadial" cx="35%" cy="35%" r="85%">
+            <stop offset="0%" stop-color="#f6f7f8"/>
+            <stop offset="25%" stop-color="#e6e8ea"/>
+            <stop offset="55%" stop-color="#cfcfd1"/>
+            <stop offset="75%" stop-color="#b7b9bb"/>
+            <stop offset="100%" stop-color="#9aa0a4"/>
+        </radialGradient>
+
+        <linearGradient id="steelGloss" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+            <stop offset="35%" stop-color="rgba(255,255,255,0.35)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+
+        <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feOffset dx="0" dy="1" result="off"/>
+            <feGaussianBlur in="off" stdDeviation="2" result="blur"/>
+            <feComposite in="blur" in2="SourceGraphic" operator="out" result="out"/>
+            <feColorMatrix in="out" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0" result="shadow"/>
+            <feComposite in="SourceGraphic" in2="shadow" operator="over"/>
+        </filter>
+
+        <style type="text/css"><![CDATA[
+      #progressArc { transition: stroke 250ms linear, stroke-dasharray 400ms ease; stroke-linecap:round; }
+      #tipBubble { transition: cx 400ms ease, cy 400ms ease, fill 200ms linear, transform 400ms ease; }
+      #tipText { font-family: "Segoe UI", Roboto, Arial, sans-serif; font-size:24px; font-weight:600; fill:#222; text-anchor:middle; dominant-baseline:middle; pointer-events:none; }
+      #centerLabelTitle { font-family: "Segoe UI", Roboto, Arial, sans-serif; font-size:18px; fill:#666; text-anchor:middle; }
+      #centerLabelValue { font-family: "Segoe UI", Roboto, Arial, sans-serif; font-size:36px; font-weight:700; fill:#222; text-anchor:middle; }
+    ]]></style>
+    </defs>
+
+    <!-- Background semicircle (stroke width doubled proportionally) -->
+    <path d="M 80 280 A 240 240 0 0 1 560 280"
+          fill="none" stroke="#EFEFEF" stroke-width="40" stroke-linecap="round" />
+
+    <!-- Progress arc: stroke-width increased to 40 -->
+    <g clip-path="url(#halfClip)">
+        <circle id="progressArc" cx="320" cy="280" r="240" fill="none"
+                stroke="#4caf50" stroke-width="40" transform="rotate(180 320 280)"
+                style="stroke-dasharray: 0 753.9822368615503;" />
+    </g>
+
+    <!-- Tip badge group: metallic circle radius doubled to 24 (was 12) -->
+    <g id="tipGroup">
+        <!-- metallic base (r = 24) -->
+        <circle id="tipBubble" cx="80" cy="280" r="24" fill="url(#steelRadial)" stroke="#9aa0a4" stroke-width="2" filter="url(#innerShadow)"/>
+        <!-- gloss overlay: larger path to match new badge size -->
+        <path d="M44 256 A24 24 0 0 1 116 256 L116 256 A24 24 0 0 0 44 256 Z"
+              fill="url(#steelGloss)" opacity="0.9" transform="translate(-4,-4) scale(1.06)"/>
+        <!-- thin rim -->
+        <circle cx="80" cy="280" r="24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"/>
+        <!-- text inside badge (font-size increased) -->
+        <text id="tipText" x="80" y="280">0%</text>
+    </g>
+
+    <!-- Center label group -->
+    <g id="centerLabel" transform="translate(320,160)" pointer-events="none">
+        <text id="centerLabelTitle" x="0" y="-6">Points</text>
+        <text id="centerLabelValue" x="0" y="26">0%</text>
+    </g>
+
+    <!-- Metadata / usage comments
+         r = 240
+         halfCircumference = Math.PI * r  (~753.9822368615503)
+         stroke-dasharray = dash + ' ' + (halfCircumference - dash)
+         angleDeg = 180 - (value/100)*180
+         angleRad = angleDeg * Math.PI/180
+         tx = cx + r * Math.cos(angleRad)
+         ty = cy - r * Math.sin(angleRad)
+         When positioning the tip badge, set cx/cy of #tipBubble and #tipText to (tx,ty).
+    -->
+</svg>

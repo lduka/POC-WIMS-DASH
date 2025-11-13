@@ -19,11 +19,12 @@ public final class WebServiceCommandDelegate {
     public static <R> R execute(WebServiceOperator<?> operator) {
         if (operator == null) return null;
         try {
+            String url = operator.buildUrlWithParams();
             switch (operator.getEndpoint().getMethod()) {
                 case GET -> {
+
                     if (operator.isSingleResult()) {
-                        String url = operator.buildUrlWithParams();
-                        return (R) operator.DO_GET_ONE(url);
+                        return (R) operator.DO_GET_ONE();
                     } else {
                         return (R) operator.DO_GET();
                     }

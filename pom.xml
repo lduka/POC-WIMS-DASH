@@ -15,6 +15,13 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+
+            <repository>
+                <id>xdev-repo</id>
+                <url>https://maven.xdev.software</url>
+            </repository>
+
+
     </repositories>
     <groupId>co.za.pos.wims.enterprise</groupId>
     <artifactId>POC-WIMS-DASH</artifactId>
@@ -52,7 +59,11 @@
             <artifactId>jakarta.faces</artifactId>
             <version>${mojarra.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>software.xdev</groupId>
+            <artifactId>chartjs-java-model</artifactId>
+            <version>2.9.0</version>
+        </dependency>
         <!-- PrimeFaces (Jakarta-compatible) -->
         <dependency>
             <groupId>org.primefaces</groupId>
@@ -88,6 +99,11 @@
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
             <version>5.0.0-M1</version>
+        </dependency>
+        <dependency>
+            <groupId>co.za.pos.wims.enterprise</groupId>
+            <artifactId>POC-WIMS-DASH</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

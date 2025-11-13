@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces">
+<ui:composition>
+    <h:form>
+        <h:panelGroup layout="block">
+            <h2>Discount List</h2>
+            <p:messages/>
+            <h:outputText value="Return processing form goes here."/>
+
+            <p:panelGrid columns="2" layout="grid" styleClass="p-fluid"
+                         columnClasses="col-12 md:col-3, col-12 md:col-9">
+                <p:outputLabel  value="Phome Number"/>
+                <p:inputText id="accountId" value="#{loyaltyViewBean.phoneNumber}" required="true"
+                             requiredMessage="Product name is required" placeholder="0812324525"/>
+
+                <p:panelGrid columns="2" layout="grid">
+                    <p:commandButton value="Save" icon="pi pi-save" oncomplete="setHalfRingProgress(#{loyaltyViewBean.progress},'#2196f3', -100);" actionListener="#{loyaltyViewBean.query}"
+                                     update="@form"/>
+
+                    <p:commandButton value="Reset" icon="pi pi-refresh" type="reset"
+                                     styleClass="p-button-secondary p-ml-2"/>
+                </p:panelGrid>
+
+            </p:panelGrid>
+
+        </h:panelGroup>
+        <object id="halfSvgObject" type="image/svg+xml" data="#{facesContext.externalContext.requestContextPath}/resources/img/ring.svg" width="350" height="200"></object>
+
+        <p:panelGrid columns="2" layout="grid" styleClass="p-fluid"
+                     columnClasses="col-6 ">
+            <p:outputLabel  value="ID: "/>
+            <p:outputLabel  value="#{loyaltyViewBean.rewardsAccount.id}"/>
+            <p:outputLabel  value="Phome Number"/>
+            <p:outputLabel  value="#{loyaltyViewBean.rewardsAccount.phoneNumber}"/>
+            <p:outputLabel  value="Current points"/>
+            <p:outputLabel value="#{loyaltyViewBean.rewardsAccount.currentPoints}"/>
+            <p:outputLabel  value="Tier level"/>
+            <p:outputLabel value="#{loyaltyViewBean.rewardsAccount.tierLevel}"/>
+
+        </p:panelGrid>
+
+            <div class="semi-circle-container">
+                <div id="myProgressBarIndicator" class="progress-indicator"/>
+            </div>
+            <p:commandButton value="Apply" update="@form"
+                             onclick="setHalfRingProgress(40,'#2196f3', 10);" />
+
+
+
+            <h:panelGroup id="svgWrapper">
+                <img id="halfSvgImg" src="#{request.contextPath}/resources/img/ring.svg" alt="progress" />
+            </h:panelGroup>
+            <h:panelGroup id="svgContainer">
+                      </h:panelGroup>
+
+
+            <p:commandButton value="Set 20%"  onclick="setHalfRingProgress(20,'#b2fc57', 10);" />
+        <p:commandButton value="Set 40%"  onclick="setHalfRingProgress(40,'#2772ad', 10);" />
+        <p:commandButton value="Set 60%"  onclick="setHalfRingProgress(60,'#f3219f', 10);" />
+        <p:commandButton value="Set 60%"  onclick="setHalfRingProgress(80,'#812b2b', 10);" />
+        <script type="application/javascript">
+            (function(){
+                const OBJECT_ID = 'halfSvgObject';
+                let state = null;
+
+                function findInObject() {
+                    const obj = document.getElementById(OBJECT_ID);
+                    if (!obj) return null;
+                    const svgDoc = obj.contentDocument || (obj.getSVGDocument &amp;&amp; obj.getSVGDocument());
+                    if (!svgDoc) return null;
+                    const arc = svgDoc.getElementById('progressArc');
+                    const tip = svgDoc.getElementById('tipBubble');
+                    const tipText = svgDoc.getElementById('tipText');
+                    const center = svgDoc.getElementById('centerLabelValue');
+                    if (arc &amp;&amp; tip &amp;&amp; tipText &amp;&amp; center) return { svgDoc, arc, tip, tipText, center, objectElem: obj };
+                    return null;
+                }
+
+                function inlineFetchAndReplace(obj) {
+                    const url = obj.getAttribute('data');
+                    if (!url) return Promise.reject('no data attribute on object');
+                    return fetch(url).then(r => r.text()).then(text => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(text, 'image/svg+xml');
+                        const svg = doc.documentElement;
+                        svg.removeAttribute('width'); svg.removeAttribute('height');
+                        obj.parentNode.replaceChild(document.importNode(svg, true), obj);
+                        return svg;
+                    });
+                }
+
+                function initFromInline(svg) {
+                    const arc = svg.querySelector('#progressArc');
+                    const tip = svg.querySelector('#tipBubble');
+                    const tipText = svg.querySelector('#tipText');
+                    const center = svg.querySelector('#centerLabelValue');
+                    if (!arc || !tip || !tipText || !center) return null;
+                    const cx = Number(arc.getAttribute('cx')) || 0;
+                    const cy = Number(arc.getAttribute('cy')) || 0;
+                    const r = Number(arc.getAttribute('r')) || 0;
+                    const halfCirc = Math.PI * r;
+                    state = { arc, tip, tipText, centerValue: center, cx, cy, r, halfCirc };
+                    return state;
+                }
+
+                function initFromObject(found) {
+                    const arc = found.arc;
+                    const cx = Number(arc.getAttribute('cx')) || 0;
+                    const cy = Number(arc.getAttribute('cy')) || 0;
+                    const r = Number(arc.getAttribute('r')) || 0;
+                    const halfCirc = Math.PI * r;
+                    state = { arc: found.arc, tip: found.tip, tipText: found.tipText, centerValue: found.center, cx, cy, r, halfCirc };
+                    return state;
+                }
+
+                // ensure we have the SVG available; if object isn't ready, wait for load or inline as fallback
+                function ensureSVGReady() {
+                    return new Promise((resolve, reject) => {
+                        // 1) try contentDocument immediately
+                        const found = findInObject();
+                        if (found) return resolve(initFromObject(found));
+
+                        // 2) wait for object load event
+                        const obj = document.getElementById(OBJECT_ID);
+                        if (obj) {
+                            const onLoad = function() {
+                                const f = findInObject();
+                                if (f) {
+                                    obj.removeEventListener('load', onLoad);
+                                    return resolve(initFromObject(f));
+                                }
+                                // if still no contentDocument, fallback to fetch+inline
+                                inlineFetchAndReplace(obj).then(svg => {
+                                    const s = initFromInline(svg);
+                                    if (s) return resolve(s);
+                                    reject('SVG inline init failed');
+                                }).catch(err => reject(err));
+                            };
+                            obj.addEventListener('load', onLoad);
+
+                            // also set a timeout fallback to inline after short wait
+                            setTimeout(() => {
+                                const f2 = findInObject();
+                                if (f2) return resolve(initFromObject(f2));
+                                // try inlining if object didn't load
+                                if (obj &amp;&amp; obj.parentNode) {
+                                    inlineFetchAndReplace(obj).then(svg => {
+                                        const s = initFromInline(svg);
+                                        if (s) resolve(s); else reject('SVG inline init failed');
+                                    }).catch(err => reject(err));
+                                } else {
+                                    reject('object missing and cannot inline');
+                                }
+                            }, 400);
+                            return;
+                        }
+
+                        // 3) nothing to do
+                        reject('No object element with id ' + OBJECT_ID);
+                    });
+                }
+
+                // public setter
+                window.setHalfRingProgress = function(value, color, pointsFactor) {
+                    if (state) {
+                        applyState(state, value, color, pointsFactor);
+                        return;
+                    }
+                    ensureSVGReady().then(s => {
+                        applyState(s, value, color, pointsFactor);
+                    }).catch(err => console.error('SVG init error', err));
+                };
+
+                function applyState(s, value, color, pointsFactor) {
+                    const v = Math.max(0, Math.min(100, Number(value) || 0));
+                    const factor = typeof pointsFactor === 'number' ? pointsFactor : 10;
+                    const dash = (v / 100) * s.halfCirc;
+                    const rest = Math.max(0, s.halfCirc - dash);
+                    s.arc.style.strokeDasharray = dash + ' ' + rest;
+                    if (color) s.arc.style.stroke = color;
+                    const angleDeg = 180 - (v / 100) * 180;
+                    const angleRad = angleDeg * Math.PI / 180;
+                    const tx = s.cx + s.r * Math.cos(angleRad);
+                    const ty = s.cy - s.r * Math.sin(angleRad);
+                    s.tip.setAttribute('cx', tx);
+                    s.tip.setAttribute('cy', ty);
+                    s.tipText.setAttribute('x', tx);
+                    s.tipText.setAttribute('y', ty + (s.r * 0.005));
+                    s.tipText.textContent = Math.round(v) + '%';
+                    s.centerValue.textContent = Math.round(v * factor) + ' pts';
+                }
+            })();
+        </script>
+
+    </h:form>
+
+ 
+</ui:composition>
+</html>

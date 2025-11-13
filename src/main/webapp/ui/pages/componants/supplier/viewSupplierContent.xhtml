@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition>
+    <p:card title="View Supplier" style="width: 100%">
+        <h:form id="viewSupplierForm">
+            <f:event type="preRenderComponent" listener="#{supplierBean.loadOne}" />
+
+            <p:messages showDetail="true" closable="true"/>
+
+            <p:panelGrid columns="2" layout="grid" styleClass="p-fluid"
+                         columnClasses="col-12 md:col-3, col-12 md:col-9">
+                <p:outputLabel value="ID"/>
+                <h:outputText value="#{supplierBean.selectedSupplier.id}"/>
+
+                <p:outputLabel value="Name"/>
+                <h:outputText value="#{supplierBean.selectedSupplier.supplierName}"/>
+
+                <p:outputLabel value="Phone"/>
+                <h:outputText value="#{supplierBean.primaryPhone}"/>
+
+                <p:outputLabel value="Email"/>
+                <h:outputText value="#{supplierBean.primaryEmail}"/>
+
+                <p:outputLabel value="VAT Number"/>
+                <h:outputText value="#{supplierBean.selectedSupplier.vatNumber}"/>
+
+                <p:outputLabel value="Description"/>
+                <h:outputText value="#{supplierBean.selectedSupplier.supplierDescription}"/>
+
+                <p:outputLabel value="Type"/>
+                <h:outputText value="#{supplierBean.selectedSupplier.supplierType}"/>
+            </p:panelGrid>
+            <p:divider/>
+            <p:outputPanel rendered="#{supplierBean.selectedSupplierContactsEmpty}">
+                <div class="flex align-items-center justify-content-start">
+                    <h:graphicImage value="/resources/img/com_error.png" style="height: 250px;"/>
+                    <img src="/resources/img/com_error.png" alt=""/>
+                </div>
+            </p:outputPanel>
+
+                <p:outputLabel   value="Contact Information:" styleClass="font-bold"/>
+                <p:dataTable var="contact" value="#{supplierBean.selectedSupplier.contactInfoLineList}"
+                             emptyMessage="No contact information available"
+                             rendered="#{not supplierBean.selectedSupplierContactsEmpty}"
+                             paginator="true" rows="10">
+                    <p:column headerText="Type">
+                        <span class="p-d-inline-flex p-ai-center">
+                            <i class="pi #{contact.contactInfoLineType eq 'email' ? 'pi-at' : (contact.contactInfoLineType eq 'phone' ? 'pi-phone' : (contact.contactInfoLineType eq 'cell' ? 'pi-mobile' : 'pi-info-circle'))} p-mr-2"/>
+                            <h:outputText value="#{empty contact.contactInfoLineType ? '' : contact.contactInfoLineType}"/>
+                        </span>
+                    </p:column>
+                    <p:column headerText="Contact Name">
+                        <h:outputText value="#{empty contact.contactInfoLineName ? '' : contact.contactInfoLineName}" />
+                    </p:column>
+                    <p:column headerText="Status">
+                        <p:badge value="#{contact.contactInfoLineStatus == 2 ? 'Active' : 'Inactive'}"
+                                 severity="#{contact.contactInfoLineStatus == 2 ? 'success' : 'danger'}"/>
+                    </p:column>
+                    <p:column headerText="Value">
+                        <h:outputText value="#{empty contact.contactInfoLineValue ? '' : contact.contactInfoLineValue}"/>
+                    </p:column>
+                </p:dataTable>
+
+            <div class="p-mt-3">
+                <p:commandLink value="Back to Suppliers"
+                               action="#{dashboardBean.setContent('supplier/listSupplier.xhtml')}"
+                               update=":mainContent" />
+            </div>
+        </h:form>
+    </p:card>
+</ui:composition>
+</html>

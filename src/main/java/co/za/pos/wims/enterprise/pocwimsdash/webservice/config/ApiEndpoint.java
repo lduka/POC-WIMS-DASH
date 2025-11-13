@@ -14,7 +14,14 @@ public enum ApiEndpoint {
     CREATE_CASHIER("create-cashier", HttpMethod.POST),
     GET_ALL_CASHIERS("get-all-cashiers", HttpMethod.GET),
     FIND_CASHIER_BY_ID("find-cashier-by-id", HttpMethod.GET),
- FIND_CASHIER_BY_EMPLOYEE_ID("find-cashier-by-id", HttpMethod.GET);
+    FIND_SALE_ITEM_BY_ID("find-sale-item-by-id", HttpMethod.GET),
+    FIND_CASHIER_BY_EMPLOYEE_ID("find-cashier-by-employee-id", HttpMethod.GET),
+    // Supplier endpoints
+    GET_ALL_SUPPLIERS("get-all-suppliers", HttpMethod.GET),
+    CREATE_SUPPLIER("create-supplier", HttpMethod.POST),
+
+    CREATE_REWARDS_ACCOUNT("create-rewards-account",HttpMethod.POST) ,
+    GET_REWARDS_ACCOUNT_BY_CELL_NUMBER("get-rewards-account-by-cell",HttpMethod.GET);
 
     private final String key;
     private final HttpMethod method;
@@ -30,7 +37,8 @@ public enum ApiEndpoint {
         this.method = method;
     }
 
-    public String url() {
+    public String url()
+    {
         return EndPointManager.getEndpoint(key);
     }
 }

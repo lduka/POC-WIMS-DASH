@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class WebServiceOperator<T> extends WebServiceMarshal<T> {
-    private final Map<String, String> parameters = new HashMap<>();
+
     private final ApiEndpoint endpoint;
     private boolean singleResult = false; // whether the expected result is a single entity
     private Object requestBody; // optional body for POST/PUT
@@ -42,8 +42,8 @@ public class WebServiceOperator<T> extends WebServiceMarshal<T> {
 
     public WebServiceOperator<T> setParameters(Map<String, String> parameters) {
         if (parameters != null) {
-            this.parameters.clear();
-            this.parameters.putAll(parameters);
+            this.getParameters().clear();
+            this.getParameters().putAll(parameters);
             performCallMutex();
         }
         return this;
@@ -51,19 +51,25 @@ public class WebServiceOperator<T> extends WebServiceMarshal<T> {
 
     public WebServiceOperator<T> setParameter(String key, String value) {
         if (key != null && value != null) {
-            this.parameters.put(key, value);
+            this.getParameters().put(key, value);
         }
         return this;
     }
 
     // Indicate that the caller expects a single entity result
     public WebServiceOperator<T> expectOne() {
-        this.singleResult = true;
+        this.singleResult = Boolean.TRUE;
         return this;
     }
 
+    public WebServiceOperator<T> asQueryParam()
+    {
+        this.setQueryParam(Boolean.TRUE);
+        return this;
+    }
     public boolean isSingleResult() {
         return singleResult;
+
     }
 
     // Expose endpoint to delegates
@@ -72,20 +78,7 @@ public class WebServiceOperator<T> extends WebServiceMarshal<T> {
     }
 
     // Expose parameters to delegates (read-only copy if needed)
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
 
-    // Helper to compose full URL with query parameters
-    public String buildUrlWithParams() {
-        String base = endpoint.url();
-        if (!parameters.isEmpty()) {
-            StringJoiner sj = new StringJoiner("&");
-            parameters.forEach((k, v) -> sj.add(URLEncoder.encode(k, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(v, StandardCharsets.UTF_8)));
-            base = base + (base.contains("?") ? "&" : "?") + sj.toString();
-        }
-        return base;
-    }
 
     private void performCallMutex() {
         // placeholder for future synchronization or validation
@@ -110,5 +103,10 @@ public class WebServiceOperator<T> extends WebServiceMarshal<T> {
             throw new RuntimeException("Failed to execute web service operation", e);
         }
         return this;
+    }
+
+
+    public void setURL()
+    {
     }
 }
